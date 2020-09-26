@@ -315,9 +315,13 @@ endif
 #   Reported to cause trouble. Only of historical interest, since we no longer
 #   build a full tool chain from source.
 
+ifeq (${CCACHE_INSTALL_DIR},)
+	CCACHE_INSTALL_DIR=`echo $(wildcard /usr/lib*/ccache)/bin | tr -s ' ' ':'`
+endif
+
 BUILD_ENV =										\
     export CCACHE_DIR=$(CCACHE_DIR) ;					\
-    export PATH=$(wildcard /usr/lib*/ccache):$(TOOL_INSTALL_DIR)/bin:$${PATH} ;		\
+    export PATH=${CCACHE_INSTALL_DIR}:$(TOOL_INSTALL_DIR)/bin:$${PATH} ;		\
     $(if $(call configure_var_fn,PATH), export PATH=$${PATH}:$(call configure_var_fn,PATH);,)	\
     export PATH="`echo $${PATH} | sed -e s/[.]://`" ;					\
     $(if $(not_native),export CONFIG_SITE=$(MU_BUILD_ROOT_DIR)/config.site ;,)	\
