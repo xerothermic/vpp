@@ -34,7 +34,7 @@ endef
 MINIMAL_STARTUP_CONF="							\
 unix { 									\
 	interactive 							\
-	cli-listen /run/vpp/cli.sock					\
+	cli-listen /run/vpp/cli-manual.sock					\
 	gid $(shell id -g)						\
 	$(if $(wildcard startup.vpp),"exec startup.vpp",)		\
 }									\
