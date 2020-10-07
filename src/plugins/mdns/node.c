@@ -67,6 +67,7 @@ static char * mdns_error_strings[] =
 typedef enum
 {
   MDNS_NEXT_DROP,
+  MDNS_NEXT_ETHERNET_INPUT,
   MDNS_N_NEXT,
 } mdns_next_t;
 
@@ -102,10 +103,10 @@ mdns_inline (vlib_main_t * vm,
 	}
 
      /* $$$$ process 4x pkts right here */
-      next[0] = MDNS_NEXT_DROP;
-      next[1] = MDNS_NEXT_DROP;
-      next[2] = MDNS_NEXT_DROP;
-      next[3] = MDNS_NEXT_DROP;
+      next[0] = MDNS_NEXT_ETHERNET_INPUT;
+      next[1] = MDNS_NEXT_ETHERNET_INPUT;
+      next[2] = MDNS_NEXT_ETHERNET_INPUT;
+      next[3] = MDNS_NEXT_ETHERNET_INPUT;
 
       if (is_trace)
 	{
@@ -148,7 +149,7 @@ mdns_inline (vlib_main_t * vm,
     {
 
      /* $$$$ process 1 pkt right here */
-      next[0] = MDNS_NEXT_DROP;
+      next[0] = MDNS_NEXT_ETHERNET_INPUT;
 
       if (is_trace)
 	{
@@ -199,6 +200,7 @@ VLIB_REGISTER_NODE (mdns_node) =
   /* edit / add dispositions here */
   .next_nodes = {
         [MDNS_NEXT_DROP] = "error-drop",
+        [MDNS_NEXT_ETHERNET_INPUT] = "ethernet-input",
   },
 };
 #endif /* CLIB_MARCH_VARIANT */
