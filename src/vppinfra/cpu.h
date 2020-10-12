@@ -248,6 +248,15 @@ clib_cpu_supports_aes ()
 }
 
 static inline int
+clib_cpu_march_priority_slm ()
+{
+  //TODO: check for slm
+  //if (clib_cpu_supports_avx512_bitalg ())
+  // return 200;
+  return 201;
+}
+
+static inline int
 clib_cpu_march_priority_icl ()
 {
   if (clib_cpu_supports_avx512_bitalg ())
