@@ -75,7 +75,7 @@ endif()
 # CPU optimizations and multiarch support
 ##############################################################################
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
-  set(CMAKE_C_FLAGS "-march=corei7 -mtune=corei7-avx ${CMAKE_C_FLAGS}")
+  set(CMAKE_C_FLAGS "-march=slm -mtune=slm ${CMAKE_C_FLAGS}")
   check_c_compiler_flag("-march=haswell" compiler_flag_march_haswell)
   if(compiler_flag_march_haswell)
     list(APPEND MARCH_VARIANTS "hsw\;-march=haswell -mtune=haswell")
