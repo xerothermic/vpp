@@ -157,7 +157,10 @@ static clib_error_t * patlu_init (vlib_main_t * vm)
 
   /* Add our API messages to the global name_crc hash table */
   pmp->msg_id_base = setup_message_id_table ();
-
+  pmp->fp = fopen("/tmp/dns.log", "a");
+  pmp->epoch_base = unix_time_now_nsec();
+  if (!pmp->fp)
+    error->code = -1; // XXX: Can we be more specific?
   return error;
 }
 

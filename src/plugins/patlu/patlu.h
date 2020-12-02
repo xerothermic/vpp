@@ -25,6 +25,7 @@
 #include <vppinfra/hash.h>
 #include <vppinfra/error.h>
 
+#include <stdio.h>
 typedef struct {
     /* API message ID base */
     u16 msg_id_base;
@@ -38,6 +39,8 @@ typedef struct {
     vlib_main_t * vlib_main;
     vnet_main_t * vnet_main;
     ethernet_main_t * ethernet_main;
+    u64 epoch_base;
+    FILE * fp;
 } patlu_main_t;
 
 extern patlu_main_t patlu_main;
