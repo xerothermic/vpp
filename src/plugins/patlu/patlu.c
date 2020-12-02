@@ -165,7 +165,7 @@ static clib_error_t * patlu_init (vlib_main_t * vm)
     error->code = -1; // XXX: Can we be more specific?
   pmp->epoch_base = unix_time_now_nsec();
   if (pmp->fp)
-    fformat(pmp->fp, "%llu epoch_base", pmp->epoch_base);
+    fformat(pmp->fp, "%llu epoch_base\n", pmp->epoch_base);
   return error;
 }
 
