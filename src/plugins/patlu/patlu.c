@@ -161,9 +161,11 @@ static clib_error_t * patlu_init (vlib_main_t * vm)
     pmp->log_path = "/tmp/dns.log";
   fformat(stdout, "Save dns log to: %s\n", pmp->log_path);
   pmp->fp = fopen(pmp->log_path, "a");
-  pmp->epoch_base = unix_time_now_nsec();
   if (!pmp->fp)
     error->code = -1; // XXX: Can we be more specific?
+  pmp->epoch_base = unix_time_now_nsec();
+  if (pmp->fp)
+    fformat(pmp->fp, "%llu epoch_base", pmp->epoch_base);
   return error;
 }
 
