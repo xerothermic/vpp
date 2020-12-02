@@ -60,7 +60,7 @@ int patlu_enable_disable (patlu_main_t * pmp, u32 sw_if_index,
     udp_unregister_dst_port(pmp->vlib_main, 53, 1);
   }
 #endif
-  vnet_l2_feature_enable_disable ("l2-output-ip4", patlu_node.name,
+  vnet_feature_enable_disable ("ip4-unicast", patlu_node.name,
                                sw_if_index, is_enable, 0, 0);
 
   // XXX: What does below do and do we need it?
@@ -157,7 +157,10 @@ static clib_error_t * patlu_init (vlib_main_t * vm)
 
   /* Add our API messages to the global name_crc hash table */
   pmp->msg_id_base = setup_message_id_table ();
-  pmp->fp = fopen("/tmp/dns.log", "a");
+  if (!pmp->log_path)
+    pmp->log_path = "/tmp/dns.log";
+  fformat(stdout, "Save dns log to: %s\n", pmp->log_path);
+  pmp->fp = fopen(pmp->log_path, "a");
   pmp->epoch_base = unix_time_now_nsec();
   if (!pmp->fp)
     error->code = -1; // XXX: Can we be more specific?
@@ -166,14 +169,29 @@ static clib_error_t * patlu_init (vlib_main_t * vm)
 
 VLIB_INIT_FUNCTION (patlu_init);
 
+static clib_error_t *
+patlu_config (vlib_main_t * vm, unformat_input_t * input) {
+  patlu_main_t * pm = &patlu_main;
+  while (unformat_check_input (input) != UNFORMAT_END_OF_INPUT) {
+    if (unformat (input, "log-path %s", &pm->log_path))
+      fformat (stdout, "Load DNS log-path from config file [%s]\n", pm->log_path);
+    else
+      return clib_error_return (0, "unknown input '%U'",
+        format_unformat_error, input);
+  }
+  return 0;
+}
+
+VLIB_EARLY_CONFIG_FUNCTION (patlu_config, "patlu");
+
 // using udp_register_dst_port mechanism instead.
 /* *INDENT-OFF* */
 VNET_FEATURE_INIT (patlu, static) =
 {
   // XXX: remember to change vnet_l2_feature_enable_disable above!
-  .arc_name = "l2-output-ip4",
+  .arc_name = "ip4-unicast",
   .node_name = "patlu",
-  //.runs_before = VNET_FEATURES ("l2-input"),
+  .runs_after = VNET_FEATURES ("nat-pre-out2in"),
 };
 /* *INDENT-ON */
 

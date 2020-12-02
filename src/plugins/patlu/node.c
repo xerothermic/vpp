@@ -87,7 +87,7 @@ typedef enum
 static inline void handle (vlib_main_t *vm, vlib_node_runtime_t *node, vlib_buffer_t *b0,
                           u32* reply_pkts, u32* other_pkts)
 {
-  vlib_buffer_advance(b0, sizeof (ethernet_header_t));
+  //vlib_buffer_advance(b0, sizeof (ethernet_header_t));
   ip4_header_t *ip40 = (ip4_header_t *) vlib_buffer_get_current(b0);
   udp_header_t *u0 = (udp_header_t *) (ip40 + 1);
   dns_header_t *d0 = (dns_header_t *) (u0 + 1);
@@ -101,7 +101,7 @@ static inline void handle (vlib_main_t *vm, vlib_node_runtime_t *node, vlib_buff
    *  XXX: What's the implication of buffer_advance for next node?
    *       Since I don't know the implication, better to shift back now.
    */
-  vlib_buffer_advance(b0, -sizeof (ethernet_header_t));
+  //vlib_buffer_advance(b0, -sizeof (ethernet_header_t));
 
   if (ip40->protocol == 17 && clib_net_to_host_u16 (u0->src_port) == 53) {
     u16 flags = clib_net_to_host_u16(d0->flags);
@@ -132,19 +132,16 @@ static inline void handle (vlib_main_t *vm, vlib_node_runtime_t *node, vlib_buff
       int rv = (*fp2) ((u8 *)d0, &rmp, 0);
       if (rv)
         clib_warning ("vnet_dns_response_to_reply failed with rv=%d", rv);
-      if (rmp.ip4_set) {
-        if (rmp.ip4_address[0] == 0xff && rmp.ip4_address[1] == 0x7f)
-          goto skip;
+      else if (rmp.ip4_set) {
         u64 ts = patlu_main.epoch_base + vlib_time_now(vm) * 1e9;
         fformat (patlu_main.fp, "%llu %U %s %U\n",
-                ts,
-                format_ip4_address, &ip40->dst_address, name0,
-                format_ip4_address, &rmp.ip4_address);
+              ts,
+              format_ip4_address, &ip40->dst_address, name0,
+              format_ip4_address, &rmp.ip4_address);
         fflush(patlu_main.fp);
       }
     }
   }
-skip:
 
   if (PREDICT_FALSE ((node->flags & VLIB_NODE_FLAG_TRACE) &&
                      (b0->flags & VLIB_BUFFER_IS_TRACED)))

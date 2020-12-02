@@ -40,6 +40,7 @@ typedef struct {
     vnet_main_t * vnet_main;
     ethernet_main_t * ethernet_main;
     u64 epoch_base;
+    const char * log_path;
     FILE * fp;
 } patlu_main_t;
 
