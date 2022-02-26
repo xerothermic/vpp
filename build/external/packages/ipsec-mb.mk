@@ -34,7 +34,7 @@ define  ipsec-mb_build_cmds
 	  SAFE_LOOKUP=n \
 	  SAFE_DATA=n \
 	  PREFIX=$(ipsec-mb_install_dir) \
-	  NASM=$(ipsec-mb_install_dir)/bin/nasm \
+	  NASM=/bin/nasm \
 	  EXTRA_CFLAGS="-g -msse4.2" > $(ipsec-mb_build_log)
 endef
 

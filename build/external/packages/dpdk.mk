@@ -19,6 +19,7 @@ DPDK_MLX5_PMD                ?= n
 DPDK_MLX5_COMMON_PMD         ?= n
 DPDK_TAP_PMD                 ?= n
 DPDK_FAILSAFE_PMD            ?= n
+DPDK_BNXT_PMD                ?= n
 DPDK_MACHINE                 ?= default
 DPDK_MLX_IBV_LINK            ?= static
 
@@ -116,6 +117,9 @@ ifeq ($(DPDK_TAP_PMD), n)
 endif
 ifeq ($(DPDK_FAILSAFE_PMD), n)
 	DPDK_DRIVERS_DISABLED += ,net/failsafe
+endif
+ifeq ($(DPDK_BNXT_PMD), n)
+	DPDK_DRIVERS_DISABLED += ,net/bnxt
 endif
 
 # Sanitize DPDK_DRIVERS_DISABLED and DPDK_LIBS_DISABLED

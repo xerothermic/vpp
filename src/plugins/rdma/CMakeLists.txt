@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+return()
+
 vpp_find_path(IBVERBS_INCLUDE_DIR NAMES infiniband/verbs.h)
 
 if (NOT IBVERBS_INCLUDE_DIR)
